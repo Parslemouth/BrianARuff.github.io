@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Ruby on Rails - Notes</title>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ <!-- Bootstrp 4-->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+ <!-- CSS Stylesheet -->
+ <link href="RoR-Styles.css" type="text/css" rel="stylesheet" />
+ <!-- Google Fonts -->
+ <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Source+Code+Pro" rel="stylesheet">
+ <!--font-family: 'Source Code Pro', monospace;
+ font-family: 'Droid Sans', sans-serif;-->
+</head>
+
+<body>
+ <!--Navbar-->
+ <nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed">
+   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+   <a class="navbar-brand" href="#"><a href="RoR Guide Notes.html#home" class="pull-left"><img src="ror-logo.png" class="logopic"></a></a>
+   <div class="collapse navbar-collapse nav-font" id="navbarNav">
+     <ul class="navbar-nav">
+       <li class="nav-item active nav-pop-out">
+         <a class="nav-link" href="RoR Guide Notes.html#one">Introduction<span class="sr-only">(current)</span></a>
+       </li>
+       <li class="nav-item active nav-pop-out">
+         <a class="nav-link" href="RoR Guide Notes.html#two">Installation</a>
+       </li>
+       <li class="nav-item active nav-pop-out">
+         <a class="nav-link" href="RoR Guide Notes.html#three">Creating a Project</a>
+       </li>
+       <li class="nav-item active nav-pop-out">
+         <a class="nav-link" href="RoR Guide Notes.html#four">Routes</a>
+       </li>
+       <li class="nav-item active nav-pop-out">
+         <a class="nav-link" href="#five">Controllers/Views/Dynamic Content</a>
+       </li>
+     </ul>
+   </div>
+ </nav>
+ <!--Jumbo Header-->
+ <div class="main-content-style" style="margin-top: 2em">
+<h1 id="five">Section Five: Controllers, Views, and
+Dynamic Content</h1><br />
+<h2>Rendering Templates</h2>
+<p>
+  To begin, go to <span>app>views>demo</span> and
+  make a duplicate copy of the
+  <span>hello.html.erb</span> file. Once you have
+  made the duplicate rename it to
+  <span>hello.html.erb</span>
+</p>
+<p>
+  Next, open the <span>index.html.erb</span> file up,
+  and make it look like the code below.
+</p>
+<pre class="code">
+
+  &lt;h1&gt;demo#index&lt;/h1&gt;
+  &lt;p&gt;This page represents the demo controllers
+  and the index action/view.&lt;/p&gt;
+</pre>
+<p>
+  Now open up the <span>hello.html.erb</span> file and make it look like the code below.
+</p>
+<pre class="code">
+
+  &lt;h1&gt;demo#hello&lt;/h1&gt;
+  &lt;p&gt;This page represents the demo controller
+  and the hello index/action.&lt;/p&gt;
+</pre>
+<p>
+  Access <span>localhost:3000/demo/index and
+  localhost:3000/demo/hello</span>. You should get
+  both pages to load.
+
+  The reason this works is because we set the rout
+  file to <span>match
+  ":controller(/:action(/:id(.:format)))", via =>
+  :get</span>. This is saying to look for whatever
+  controller name is given and if found look for what
+  ever action is given. However, we don't have an
+  action for hello currently defined. Using the route
+  we set-up, rails knows to look for the template for
+  hello.html.erb from the views folder, and since we
+  had one there, it was displayed back to the
+  browser. If our routes file only contained
+  <span>get "demo/index"</span> would only pull up
+  the index.html.erb page becuse this method will
+  only work if the exact strings match.
+
+  If we type in
+  <span>localhost:3000/demo/money</span> then it will
+  return an error called <span>Unknown action</span>.
+  The framework is saying there is no action method
+  in the demo controlled called "money" and there is
+  also no template called "money.html.erb" in the
+  rails views folder, and thus we get an error
+  message.
+
+  We have shown we can render a page without the use
+  of an action, but it's considered a best practice
+  to set up an action method for this, so your demo
+  controller file should contain the following bit of
+  code.
+</p>
+  <pre class="code">
+
+    def hello
+    end
+  </pre>
+  <p>
+  Now let's have a bit of fun. We can make the index
+  action render the hello.html.erb template using the
+  code below in our demo controller file. Also, let's
+  go ahead and make the hello action render the
+  index.html.erb template as well. We don't have to provide the <span>.html.erb extension because that's not part of the name of the template.</span>
+  </p>
+  <pre class="code">
+
+    def index
+      render(:template => 'demo/hello')
+    end
+
+    or
+
+    def index
+      render("demo/hello")
+    end
+  </pre>
+  <p>
+    If you visit the index and hello page they will
+    render as follows.
+    <pre class="code">
+
+<h1>
+  Demo#Hello</h1>
+This page represents the demo controller with
+the hello view/action.
+    </pre>
+    <pre class="code">
+<h1 style=>
+  Demo#index</h1>
+This page represents the demo controller and
+the index view/action.
+    </pre>
+  </p>
+  <p>
+    If you look at the server log you will see this.
+  </p>
+  <pre>
+
+    <b>Started GET "/demo/hello"</b> for 127.0.0.1 at
+    2017-10-11 22:44:49 -0400
+    <b>Processing by DemoController#hello</b> as HTML
+    <b>Rendered demo/index.html.erb within
+    layouts/application (0.0ms)</b>
+    Completed 200 OK in 34ms (Views: 34.4ms |
+    ActiveRecord: 0.0ms)
+  </pre>
+  <p>
+    Three things happened here (in regards to going to
+    <span>localhost:3000/demo/hello</span>).
+    1. The server received a GET request to access "
+    demo/hello".
+    3. The demo controller processes the request by
+    refering to the hello action method.
+    2. The server rendered the template layout
+    "demo/index.html.erb" within layouts/application
+    which is what was displayed on our browser screen.
+  </p>
+  <h2>Redirecting Actions</h2>
+  <p>
+    Instead of the controller rendering a view, it can perform
+    a redirect back to the browser.
+
+    When a redirect occurs the following will happen in the
+    server log (when accessing localhost:3000/demo/hello)
+    <pre>
+
+      HTTP/1.1 302 Found
+      Location: http://localhost:3000/demo/hello
+    </pre>
+  </p>
+  <p>
+    The browser sends a requests for something, but for
+    whatever reason the server denies it, and sends back a 302
+    code to the browser which lets it know to ask for the new
+    page attached to the 302 code. The browser then sends a new
+    request for the said page.
+  </p>
+  <p>
+    Let's create a redirect. Go to the demo controller file and
+    create a new action method that looks like:
+    <pre class="code">
+
+      def other_hello
+        redirect_to(:controller => 'demo', action: => 'index')
+      end
+    </pre>
+  </p>
+  <p>
+    Since redirect_to is part of the HTTP Spec you can go to
+    any url you want. It doesn't have to be a controller or a
+    view. If you want to redirect_to Facebook then you would do
+    the following.
+  </p>
+  <pre class="code">
+
+    def facebook
+      redirect_to
+    end
+  </pre>
+  <h2>View Templates</h2>
+  <p>
+    So far we have only used html in our templates. Let's use
+    some Ruby code instead.
+  </p>
+  <p>
+     To achieve this we will use embedded ruby (ERB).
+     The file name and extension we've seen so far
+     (hello.html.erb) means rails is going to look at the
+     template named "hello" and then process the ERB code
+     and then finally display everything as HTML.
+  </p>
+  <p>
+    <span>&lt;% %&gt;</span> means open ERB and close
+    ERB. Code between this area will only execute code.
+
+    <span>&lt;%= %></span> the addition of the equals
+    mark means to print the code to the screen as html.
+    Code between this area will both be executed and
+    displayed to the screen.
+  </p>
+  <p>
+    We can use the embedded ruby code like such, if we
+    want to add 1 + 1 we must type in the following:
+    <pre class="code">
+
+      <%= 1 + 1 %>
+    </pre>
+  </p>
+  <p>
+    This will show "2" on the webpage. However, the is we
+    failed to put the <span>=</span> in then the code
+    would only be executed but not diplayed on the screen.
+  </p>
+  <p>
+    We can do variables as well.
+    <pre  class="code">
+
+      <% target = "world" %>
+      <%= "Hello, #{target}" %>
+    </pre>
+  </p>
+  <p>
+    The above code sets the variable target to the string
+    "world". The next line of code show the result of the
+    string interpolation of "Hello, {target}" on the
+    screen. It would simply say <span>Hello, world</span>
+    on the webpage.
+  </p>
+  <p>
+    The following times loop shows us some more syntax that is different
+    than regular Ruby.
+  </p>
+  <pre  class="code">
+
+    <% 3.times do %>
+    <%= "x" %>
+    <% end %>
+  </pre>
+  <p>
+    In regular Ruby this would look like the code below.
+  </p>
+  <pre  class="code">
+
+    3.times <!DOCTYPE html>
+    puts "x"
+    end
+  </pre>
+  <p>
+    This ruby code would not show anything on our page.
+    <span>puts</span> is ommitted and replaced with the
+    <span>=</span> sign. <span>end</span> is wrapped in
+    <span>&lt;%=&gt; and &lt;%&gt;</span>.
+  </p>
+  <h2>Instance Variables</h2>
+  <p>
+    Instance variables are recognized by having the <span>@</span> in
+    front of a variable name. Instance variables is the way rails way for
+    carrying data from controller to view.
+  </p>
+  <p>
+    Let's make an instance variable in the demo controller file.
+  </p>
+  <pre class="code">
+
+    def hello
+      @array = [1,2,3,4,5]
+    end
+  </pre>
+  <p>
+    Now, let's move back to the hello.html.erb template
+    and make use of our new @array instance variable via
+    an .each loop.
+  </p>
+  <pre class="code">
+
+    <% @array.each do |n| %>
+      <%= n %> &lt;br&gt;
+    <%end%>
+  </pre>
+  <p>
+    The code above loops through the @array variable we
+    set-up in the hello action method. It then displays
+    the information item by item with a break after each
+    item and then ends when the loop has iterated
+    through the array. Action methods in one controller
+    cannot be called to another controller or even view.
+    Action methods and their corresponding controllers are
+    coded together in something called
+    <span>ActionPack</span>. Even though the controller
+    can access the view, the view cannot access the
+    controller in a reverse manner. The controler actions
+    must be set-up before hand.
+  </p>
+  <h2>Links</h2>
+  <p>
+    The format of a link is as follows:
+    <pre class="code">
+
+      <%= link_to('Hello Page', :controller => 'demo',
+      :action "hello")
+    </pre>
+  </p>
+  <p>
+    The <span>link_to</span> works like a GET request. We
+    specify serveral arguments in the parenthesis. First,
+    we put the line of text the link should say, next we
+    specify the controller, and finally the view.
+  </p>
+  <p>
+    Let's make a link on the hello page going back to the
+    index page.
+  </p>
+  <pre class="code">
+
+    <% link_to('Index Page', :controller => 'demo',
+    :action => 'index')
+  </pre>
+  <pre>
+
+    Started GET "/demo/index" for 127.0.0.1 at 2017-10-13
+    00:43:32 -0400
+    Processing by DemoController#index as HTML
+    Rendered demo/index.html.erb within
+    layouts/application (0.0ms)
+  </pre>
+  <p>
+    The above bit of technical jargon is actually the
+    server log. It's saying the server received a GET
+    request for the demo#index action which was then
+    processed by the DemoController#index as HTML and then
+    rendered the view page "demo/index.html.erb" which was
+    located within layouts/applications.
+  </p>
+  <p>
+    The routes file plays a double role. It can handle the
+    information sent-in and the information sent-out. This
+    allows us to write easier and more powerful links than
+    plain HTML.
+  </p>
+  <h2>URL Parameters</h2>
+  <p>
+    HashWithIndifferentAccess allows us to reference
+    the hash keys using a symbol or a string.
+  </p>
+  <p>
+    In HTML parameters are the values to the right of the
+    question mark. Let's examine the code below.
+    <pre class="code">
+
+      /demo/hello/1?page=2&name=Brian
+    </pre>
+  </p>
+  <p>
+    Since ID, page, and name are all key value pairs
+    seperated by an ampersand we can write them out in
+    Rails. We can access these parameters using the rails
+    method called <span>params</span>. Params returns all
+    of the GET and POST variables that were sent in the
+    request. All parameters are put there including
+    controller and action. Note that what params returns
+    is not a regular hash. It's a hash with indifferent
+    access which means it can be called on in the form of
+    a string or with a colon in front like below. When
+    writing out the order in a hash the order doesn't
+    matter.
+  </p>
+  <pre class="code">
+    link_to('Hello(p)', {:controlelr => 'demo', :action =>
+    'hello', :page => 1 :id => 2}) %>
+  </pre>
+  <p>
+    Note that when we go to the hello page the id is to
+    the left of the ? mark.
+  </p>
+  <p>
+    We've added values to the link, now let's read them
+    back-in. Params values are usually read in the
+    controller. Since we are using params to make choices
+    or perform actions then we will specify them in the
+    demo controller hello action method like below.
+  </p>
+  <pre  class="code">
+
+    def hello
+    @id = params[:id]
+    @page = params[:page]
+  </pre>
+  <p>
+    When we call on the instance variables we have made it
+    will return the hash params with the specified
+    information (in this case it is :id).
+  </p>
+  <p>
+    Let's go to the hello.erb.html page to let us know for
+    sure we can actually use the instance variables for
+    something useful.
+  </p>
+  <pre  class="code">
+
+    ID: <%= @id %>
+    Page: <%= @page %>
+  </pre>
+  <p>
+    This should display the ID number we assigned in the
+    link_to as well as the page number param.
+  </p>
+  <p>
+    If we want to access the next page then we would do so
+    like below.
+  </p>
+  <pre  class="code">
+
+    <%= @page.to_i + 1 %>
+  </pre>
+  <p>
+    This converts the @page to an integer and then adds 1
+    to it. If you don't convert the @page to an integer it
+    will give you a TypeError. In this case it would be no
+    implicit conversion of fixnum into string. We cannot
+    add strings and integers, so we must convert the
+    string to an integer.
+  </p>
+  <p>
+    Note that parameters are always strings and if you
+    want to do math with them you must convert them to an
+    integer using the <span>.to_i</span> method which
+    converts the string to a number (if possible.) It
+    would be best to convert the instance variable to an
+    integer in the controller rather than in the template.
+  </p>
+  <p>
+    We can view the params of the page as well using the
+    .inspect method which just looks at the content of the
+    params hash and displays it on the screen like below.
+  </p>
+  <pre class="code">
+
+    <%= params.inspect %>
+  </pre>
+  <p>
+    This would return the following.
+  </p>
+  <pre class="code">
+
+    {"page"=>"1", "controller"=>"demo", "action"=>"hello",
+    "id"=>"2"}
+  </pre>
+  <p>
+    This makes troubleshooting problems easier via being
+    able to inspect the params and ensuring they are what
+    they are expected to be.
+  </p>
+  <h1>Databases and Migrations</h1>
+  <h2>Introduction to Databases</h2>
+  <p>
+    A data base is similar to an excel spread sheet, but
+    they are not the same thing.
+
+    <span>Databases</span> can define and traverse
+    relationships between tables. Databases are interacted
+    with via commands via command line. Databases are
+    optimized for working with relational data.
+  </p>
+  <p>
+    You should learn the basics of SQL. A google or
+    youtube search for "learn SQL basics" should be enough
+    to get you started. You don't need to be an expert,
+    but some knowledge is desirable.
+  </p>
+  <table style="width: 100%">
+  <tr>
+    <th>
+      Database
+    </th>
+    <th>
+      Table
+    </th>
+    <th>
+      Column
+    </th>
+    <th>
+      Rows
+    </th>
+    <th>
+      Field
+    </th>
+  </tr>
+  <tr>
+  <td>
+    A set of tables. One database equals one
+    application. Access permissions are granted at the
+    database level. However, the app's code will decide
+    what users can can access the different levels of
+    information on a website.
+  </td>
+  <td>
+    a set of column and rows. One table is equal
+    to model. The model and the table represent a single
+    concept, a noun. The names of tables are pluralized
+    and lowercase.
+  </td>
+  <td>
+    A set of data of a single simple type. A single
+    simple type refers to the data-type, for example,
+    age may be an integer because it is typically taken
+    in integer format.
+  </td>
+  <td>
+    A single record of data (aka, an object.)</pre>
+  </td>
+  <td>
+    A single value.
+  </td>
+  </tr>
+  <tr>
+    <th>
+      Index
+    </th>
+    <th>
+      Foreign Keys
+    </th>
+    <th>
+      Schema
+    </th>
+    <th>
+      CRUD
+    </th>
+    <tr>
+    <td>
+      A data structure of a table that allows you
+      to look up items in the database very quickly.
+    </td>
+    <td>
+      A table column whose values reference rows in
+      another table. They are always attached to indexes,
+      and should be singular.
+    </td>
+    <td>
+      The structural definition of a database.
+    </td>
+    <td>
+      Create, Read, Update, Delete.
+    </td>
+  </tr>
+</table><br />
+  <h2>Creating a Database</h2>
+  <p>
+    We are going to create the database (db) using MySQL
+    commands in the MySQL shell.
+  </p>
+  <p>
+    There are four SQL database commands that we need to
+    learn for now.
+  </p>
+  <ul>
+    <li>
+      SHOW DATABASES;
+    </li>
+    <li>
+      CREATE DATABASE db_name;
+    </li>
+    <li>
+      USE db_name;
+    </li>
+    <li>
+      DROP DATABASE db_name;
+    </li>
+  </ul>
+  <p>
+    Open Mysql Shell (note that if you have any problems
+    accessing the databases through MySQL look into
+    installing XAAMP and using the mysql shell through
+    their control pane.) Enter the following command to access MySQL.
+  </p>
+  <pre>
+
+    mysql -u root
+  </pre>
+  <p>
+    This will login as the root user.
+  </p>
+  <p>
+    Next, type in SHOW DATABASES;
+  </p>
+  <pre>
+
+    SHOW DATABASES;
+  </pre>
+  <p>
+    This will show the databases that currently exist.
+  </P>
+  <p>
+    Now we will create our projects database.
+  </p>
+  <pre>
+
+    CREATE DATABASE simple_cms_development
+  </pre>
+  <p>
+    If you show the databases again it should show up on
+    the list.
+  </p>
+  <h3>Creating a New MySQL User</h3>
+  <p>
+    Create a new user to login into MySQL for this project.
+  </p>
+  <pre>
+
+    GRANT ALL PRIVILEGES ON db_name.*
+    TO 'username'@'localhost'
+    IDENTIFIED BY 'password';
+  </pre>
+  <p>
+    Confirm the user was created by typing in
+  </p>
+  <pre>
+
+    SHOW GRANTS FOR 'username'@'localhost';
+  </pre>
+  <p>
+    now type in <span>exit;</span> and then type in the
+    following to login as the new user.
+  </p>
+  <pre>
+
+    mysql -u simple_cms -p simple_cms_development
+  </pre>
+  <p>
+    The above command could be formatted like this
+    <span>mysql -u username -p db_name</span> This logs in
+    to the Mysql with the given username and also uses the
+    database name given.
+  </p>
+  <h2>Database Configuration</h2>
+  <p>
+    Go to your project folder in Atom and look in the
+    Config folder and find the file called database.yml.
+  </p>
+  <p>
+    .yml means YAML aint markup language. This is supposed
+    to be progrmmer humor.
+  </p>
+  <p>
+    The file should look like the code below.
+  </p>
+  <pre>
+
+    development:
+      adapter: mysql2
+      encoding: utf8
+      database: simple_cms_development
+      pool: 5
+      username: simple_cms
+      password: yourpassword
+      socket: /mysql/mysql.sock
+  </pre>
+  <p>
+    If you don't have the socket then go to the mysql
+    shell and type in the following
+  </p>
+  <pre>
+
+    mysqladmin variables
+  </pre>
+  <p>
+    Look for the socket variable and the file path beside
+    it. Put that file path in the database.yml beside
+    socket. Make sure you set the username and password to
+    what you set them to be in mysql.
+  </p>
+  <p>
+    Note that there are 3 groups of code in this file. The
+    first being development followed by test and
+    production. Development is for developing (before the
+    world can see it.) Production is used when we put the
+    application on a live server for the public to use.
+    Development and production will be configured
+    differerntly. The test environment allows us to test
+    the application code to ensure it works properly.
+  </p>
+  <p>
+     Next run the following command
+  </p>
+  <pre>
+
+    rake db:schema:dump
+  </pre>
+  <p>
+    This connects rails to the development database.
+  </p>
+  <p>
+    If you open <span>db>schema.rb</span> you will notice
+    that it's set to version 0. This is the baseline level
+    for the schema, and means it's brand new.
+  </p>
+  <h3>The Rake Command</h3>
+  <p>
+    Rake is written in Ruby code. It runs scripts known as
+    tasks. A typical rake command sort of looks like
+    <span>rake</span> followed by whatever task we want it
+    to perform.
+  </p>
+  <p>
+    <span>Rake -T</span> will return a list of task that
+    the rake command can do.
+    <span>Rake -T db</span> shows only database tasks.
+  </p>
+  <p>
+    Passing envrionment variables allows rake to target
+    which mode we are writing code in. An example would be
+    <span>rake db:schema:dum RAILS_ENV=production</span>
+    This will change the environment to production instead
+    of whatever mode it's currently in.
+  </p>
+  <h2>Introducting  Migrations</h2>
+  <p>
+    Migrations add tables to the database. A migration is
+    a set of db instructions. They migrate the database
+    from one state to another (aka "changes".) A migration
+    holds instructions for moving up to a new state and
+    then back down to a previous state.
+  </p>
+  <p>
+    Migrations are use for because they maintain the db
+    schema with the applications code. If you move your
+    files to a new computer all you have to do is run the
+    migrations and the db will be up-to-date, state-wise.
+    Migrations allow use to share db changes with other
+    developers. Migrations help with versioning as well
+    via git. Migrations allow us to write Ruby code as
+    well.
+  </p>
+  <h2>Generating Migrations</h2>
+  <p>
+    We are going to create our first migration. Migrations reside in the db directory.
+  </p>
+  <pre>
+
+    rails generate migration DoNothingYet
+  </pre>
+  <p>
+    This created a folder called migrate which will
+    contain a Ruby class and method. Change the "change"
+    method to "up" and create a new method called "down".
+    If we run this migration now it will execute the up
+    method but won't make any changes to the database.
+  </p>
+  <h3>Generating a Model</h3>
+  <p>
+    go to the command line and type-in
+  </p>
+  <pre>
+
+    rails generate Model
+  </pre>
+  <p>
+    This generates a model with
+    migrations. Model names are singular.
+  </p>
+  <p>
+    It will generate a file in the
+    db>migrate folder with a timestamp.
+    It also generates a model called
+    user.rb in the app>model folder. It
+    creates some tests files as well.
+  </p>
+  <p>
+    Open up the migration we created for
+    Users. Change the "change" method to
+    "up" and add a "down" method like so:
+  </p>
+  <pre>
+
+    def up
+      create_table :users do |t|
+        t.timestamps
+    end
+
+    def down
+      drop_table :users
+    end
+  </pre>
+  <h3>Table Column Types</h3>
+  <ul>
+    <li>binary</li>
+    <li>boolean</li>
+    <li>date</li>
+    <li>datetime</li>
+    <li>decimal</li>
+    <li>float</li>
+    <li>integer</li>
+    <li>string</li>
+    <li>text</li>
+    <li>time</li>
+  </ul>
+  <h3>Table column options</h3>
+  <ul>
+    <li>:limit => size</li>
+    <li>:default => value</li>
+    <li>:null => true/false</li>
+    <li>:precision => number</li>
+    <li>:scale => number</li>
+  </ul>
+  <p>
+    Now, let's add some code into the migration file.
+  </p>
+  <pre>
+
+    t.string "first_name", :limit => 25
+    t.string "last_name", :limit => 50
+    t.string "email", :defualt => "", :null => false
+    t.string "password", :limit => 40
+  </pre>
+  <p>
+    The way the format of this works is as follows.
+    t.string creates  a table with the type of string. The
+    "first_name" part is going to be the name of the
+    column. The :limit = > 25 is the part that specifies
+    the length of the string. The email column will have a
+    default entry of a blank string, and will not be
+    accepted unless something is entered into the field.
+  </p>
+  <p>
+    Rails creates an ID to a table by default. If you don't
+    want an auto-incrementing ID then do the following in
+    the migration file.
+  </p>
+  <pre>
+
+    create_table :user, {:id => false} do |t|
+  </pre><br />
+  <h2>Running Migrations</h2>
+  <p>
+    Let's run our migrations.
+  </p>
+  <pre>
+     rake db:migrate
+  </pre>
+  <p>
+    You should have ran the migrtion for CreateUsers and
+    DoNothingYet. You can verfiy they are in the up method
+    by typing in <span>rake db:migrate:status into the
+    command line.</span>
+  </p>
+  <p>
+    Next, login to mysql
+  </p>
+  <pre>
+
+    mysql -u simple_cms -p simple_cms_development
+  </pre>
+   <p>
+     Next type in <span>SHOW TABLES;</span>, and you will
+     see we now have two tables created.
+   </p>
+   <p>
+     Now, let's take a look at the users table.
+   </p>
+   <pre>
+     SHOW FIELDS FROM USERS;
+   </pre>
+   <p>
+     And now we have the table definitions that we made.
+   </p>
+   <p>
+     Next, let's look at the schema table. Type in
+     <span>SHOW FILEDS FROM schema_migrations;</span>
+   </p>
+   <p>
+     Now we show all the data inside the schema table.
+   </p>
+   <pre>
+
+     SELECT * FIELDS FROM schema_migrations;
+   </pre>
+   <p>
+     The versions in this are the same as the migrations
+     in our db folder in our rails framework.
+   </p>
+   <p>
+     Exit MySQL, and go to the schema.rb file. You will
+     notice it is full of the data we specified in the
+     latest version of the migration.
+   </p>
+   <p>
+     Now, let's use migrate down.
+   </p>
+   <pre>
+     rake db:migrate VERSION=0
+   </pre>
+   <p>
+     This will migrate back to version zero (before any
+     migrations were ran.) Now run the command. Note that
+     it reversed the migrations in reverse order. Check
+     out MySQL and check out the tables again. Type in
+     <span>SHOW TABLES;</span>, and you will see the
+     schema table is still there but the
+     simple_cms_develoepment table is gone. If you open up
+     the schema table via <span>SELECT * FROM
+     schema_migrations;</span>, and you will notice the
+     table is now empty.
+   </p>
+   <p>
+     Exit MySQL and this time we will run migrations only
+     part of the way. Let's start by checking the status
+     via <span>rake db:migrate:status</span>. It should
+     show both migrations are in the down state. This is
+     also a way to get the migrations ID numbers as well.
+     If we want to execute just one version then just put
+     in the version number like so <span>rake db:migrate VE
+     RSION=20171017200306(this should be your version
+     number.)</span> If you check the status you will see
+     only the DoNothingYet migration is up. Now, run
+     <span>rake db:migrate</span> and check the status
+     again and you'll see that both are in an up state.
+     Now, run the DoNothingYet version again(<span>rake
+     db:migrate VERSION=20171017200306</span>)
+   </p>
+   <h3>Running Migrations</h3>
+   <ul>
+     <li>rake db:migrate => migrates all migrations not
+       performed</li>
+     <li>rake db:migrate VERSION=0 => goes back to before
+       any migrations were performed.</li>
+     <li>rake db:migrate VERSION=201710017200306 => go to
+       a specific version</li>
+     <li>rake db:migrate:status => show the state of all
+       migrations</li>
+     <li>rake db:migrate:up VERSION=201710011720036 => run
+       the up method of the specified version.</li>
+     <li>rake db:migrate:down => runs the down version of
+       the specified version.</li>
+     <li>rake db:migrate:redo => cyles through the down
+       method and then to the upmethod.</li>
+   </ul>
+   <h2>Migration Methods</h2><br />
+   <h3>Table Migration Methods</h3>
+   <uL>
+     <li>create_table</li>
+     <li>drop_table</li>
+     <li>rename_table</li>
+   </uL>
+   <h3>Column Migration Methods</h3>
+   <ul>
+     <li>add_column(table_name, column_name, type, options)</li>
+     <li>remove_column(table_name, column_name)</li>
+     <li>rename_column(table_name, column_name, new_name)</li>
+     <li>change_column(table_name, column_name, type, options)</li>
+   </ul>
+   <h3>Index Migration Methods</h3>
+   <ul>
+     <li>add_index(table_name, column_name, options)</li>
+     <li>remove_index(table_name, column_name)</li>
+   </ul>
+   <h4>Index Migration Method Options</h4>
+   <ul>
+     <li>
+       :unique => true/false
+     </li>
+     <li>
+       :name => "your_custom_name"
+     </li>
+   </ul>
+   <p>
+     Let's create a new migrtion in the text editor.
+   </p>
+   <pre>
+
+     rails generate migration AlterUsers
+   </pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<!-- Javascript and Libraries -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script src="ror-script.js"></script>
+</body>
+</html>

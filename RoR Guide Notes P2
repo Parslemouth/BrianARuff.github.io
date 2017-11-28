@@ -1,0 +1,124 @@
+<h1 id="five">Section Five: Controllers, Views, and
+Dynamic Content</h1><br />
+<h2>Rendering Templates</h2>
+<p>
+  To begin, go to <span>app>views>demo</span> and
+  make a duplicate copy of the
+  <span>hello.html.erb</span> file. Once you have
+  made the duplicate rename it to
+  <span>hello.html.erb</span>
+</p>
+<p>
+  Next, open the <span>index.html.erb</span> file up,
+  and make it look like the code below.
+</p>
+<pre class="code">
+
+  &lt;h1&gt;demo#index&lt;/h1&gt;
+  &lt;p&gt;This page represents the demo controllers
+  and the index action/view.&lt;/p&gt;
+</pre>
+<p>
+  Now open up the <span>hello.html.erb</span> file and make it look like the code below.
+</p>
+<pre class="code">
+
+  &lt;h1&gt;demo#hello&lt;/h1&gt;
+  &lt;p&gt;This page represents the demo controller
+  and the hello index/action.&lt;/p&gt;
+</pre>
+<p>
+  Access <span>localhost:3000/demo/index and
+  localhost:3000/demo/hello</span>. You should get
+  both pages to load.
+
+  The reason this works is because we set the rout
+  file to <span>match
+  ":controller(/:action(/:id(.:format)))", via =>
+  :get</span>. This is saying to look for whatever
+  controller name is given and if found look for what
+  ever action is given. However, we don't have an
+  action for hello currently defined. Using the route
+  we set-up, rails knows to look for the template for
+  hello.html.erb from the views folder, and since we
+  had one there, it was displayed back to the
+  browser. If our routes file only contained
+  <span>get "demo/index"</span> would only pull up
+  the index.html.erb page becuse this method will
+  only work if the exact strings match.
+
+  If we type in
+  <span>localhost:3000/demo/money</span> then it will
+  return an error called <span>Unknown action</span>.
+  The framework is saying there is no action method
+  in the demo controlled called "money" and there is
+  also no template called "money.html.erb" in the
+  rails views folder, and thus we get an error
+  message.
+
+  We have shown we can render a page without the use
+  of an action, but it's considered a best practice
+  to set up an action method for this, so your demo
+  controller file should contain the following bit of
+  code.
+</p>
+  <pre class="code">
+    def hello
+    end
+  </pre>
+  <p>
+  Now let's have a bit of fun. We can make the index
+  action render the hello.html.erb template using the
+  code below in our demo controller file. Also, let's
+  go ahead and make the hello action render the
+  index.html.erb template as well. We don't have to provide the <span>.html.erb extension because that's not part of the name of the template.</span>
+  </p>
+  <pre class="code">
+    def index
+      render(:template => 'demo/hello')
+    end
+
+    or
+
+    def index
+      render("demo/hello")
+    end
+  </pre>
+  <p>
+    If you visit the index and hello page they will
+    render as follows.
+    <pre class="code">
+
+<h1>Demo#Hello</h1>
+This page represents the demo controller with
+the hello view/action.
+    </pre>
+    <pre class="code">
+
+<h1 style=>Demo#index</h1>
+This page represents the demo controller and
+the index view/action.
+    </pre>
+  </p>
+  <p>
+    If you look at the server log you will see this.
+  </p>
+  <pre>
+    <b>Started GET "/demo/hello"</b> for 127.0.0.1 at
+    2017-10-11 22:44:49 -0400
+    <b>Processing by DemoController#hello</b> as HTML
+    <b>Rendered demo/index.html.erb within
+    layouts/application (0.0ms)</b>
+    Completed 200 OK in 34ms (Views: 34.4ms |
+    ActiveRecord: 0.0ms)
+  </pre>
+  <p>
+    Three things happened here (in regards to going to
+    <span>localhost:3000/demo/hello</span>).
+    1. The server received a GET request to access "
+    demo/hello".
+    3. The demo controller processes the request by refering to the hello action method.
+    2. The server rendered the template layout
+    "demo/index.html.erb" within layouts/application
+    which is what was displayed on our browser screen.
+  </p>

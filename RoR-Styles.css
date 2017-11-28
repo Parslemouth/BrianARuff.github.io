@@ -1,0 +1,72 @@
+  .main-content-style {
+    background-color: #181D22; color: #B0B9C1; font-size: 16px; font-family: 'Droid Sans', sans-serif; padding: 5em; width: 100%;
+  }
+
+  p {
+    white-space: pre;
+    white-space: p-wrap; white-space: -moz-p-wrap;white-space: -p-wrap; white-space: -o-p-wrap; word-wrap: break-word; margin: auto; font-size: 20px;
+  }
+
+  pre {
+    font-family: 'Source Code Pro', monospace; font-size: 14px; background: #EEE url(gearicon.png) no-repeat left top; color: black; position: relative; padding: 3em 0em 0em 0em; margin: 5px; max-width: 666px;
+  }
+  .code {
+        font-family: 'Source Code Pro', monospace; font-size: 14px; background: #4267B2 url(gearicon.png) no-repeat left top; color: white; position: relative; padding: 3em 0em 0em 0em; margin: 5px; max-width: 666px;
+  }
+
+  .pic-styles {
+    width: 504px; border: 5px solid #FFB71B; border-radius: 25px;
+    position: relative; margin: auto; display: inline-block;
+  }
+
+  .jumbo-font-large {
+    font-family: cursive; text-align: center; color: white;
+    font-size: 55px;
+  }
+
+  .jumbo-header {
+     margin: auto; background: rgba(255,0,0,0.525); border: 5px solid white; border-radius: 5px; padding: 64px; margin-top: 2.25em; float: left; width: 504px;
+  }
+
+  .font-full-decoration {
+    font-weight: bold; text-decoration: underline; font-style: italic;
+  }
+
+  .fixed {
+    position: fixed; top: 0; width: 100%; font-family: 'Droid Sans'; margin-left: auto; z-index: 1;
+  }
+
+  span {
+    font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: 900;
+  }
+
+  .clear {
+    clear: both;
+  }
+
+  .logopic {
+    width: 52px; position: relative;
+  }
+  .center {
+    display: block; margin: 0 auto;
+  }
+
+  .atom-styles {
+    width: 720px; border: 5px solid #FFB71B; border-radius: 25px;
+    position: relative; margin: auto; display: inline-block;
+  }
+
+  .nav-pop-out:hover {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  table, th, td {
+      border: 1px solid white;
+      border-collapse: collapse;
+  }
+  td {
+    width: 20%;
+  }
+  th, td {
+    padding: 15px;
+}
